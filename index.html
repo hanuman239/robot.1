@@ -7,14 +7,15 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f4f4f4;
+            margin: 0;
         }
 
-        .chatbox {
+        .chat-container {
             width: 400px;
             height: 600px;
             background-color: white;
@@ -24,17 +25,17 @@
             flex-direction: column;
         }
 
-        .chatbox-header {
+        .chat-header {
             padding: 15px;
             background-color: #007bff;
             color: white;
-            text-align: center;
             font-size: 18px;
+            text-align: center;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
         }
 
-        .chatbox-body {
+        .chat-body {
             flex: 1;
             padding: 15px;
             overflow-y: auto;
@@ -47,31 +48,31 @@
             border-radius: 10px;
         }
 
+        .user-message {
+            background-color: #e0e0e0;
+            text-align: right;
+        }
+
         .bot-message {
             background-color: #007bff;
             color: white;
             text-align: left;
         }
 
-        .user-message {
-            background-color: #e0e0e0;
-            text-align: right;
-        }
-
-        .chatbox-footer {
+        .chat-footer {
+            display: flex;
             padding: 10px;
             background-color: #f1f1f1;
-            display: flex;
         }
 
-        .chatbox-footer input {
+        .chat-footer input {
             flex: 1;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
 
-        .chatbox-footer button {
+        .chat-footer button {
             padding: 10px;
             background-color: #007bff;
             color: white;
@@ -83,61 +84,67 @@
     </style>
 </head>
 <body>
-    <div class="chatbox">
-        <div class="chatbox-header">မြန်မာ Chatbot</div>
-        <div class="chatbox-body" id="chatbox-body">
-            <div class="message bot-message">ဟေး! ကျွန်တော်ကို မေးမြန်းလိုတာတွေ မေးနိုင်ပါတယ်။</div>
-        </div>
-        <div class="chatbox-footer">
-            <input type="text" id="user-input" placeholder="စာရိုက်ပါ..." />
-            <button onclick="sendMessage()">Send</button>
-        </div>
+
+<div class="chat-container">
+    <div class="chat-header">မြန်မာ ChatGPT Chatbot</div>
+    <div class="chat-body" id="chat-body">
+        <div class="message bot-message">မေးမြန်းလိုတာ မေးပါ။</div>
     </div>
+    <div class="chat-footer">
+        <input type="text" id="user-input" placeholder="စာရိုက်ပါ..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
 
-    <script>
-        const chatboxBody = document.getElementById('chatbox-body');
+<script>
+    const chatBody = document.getElementById('chat-body');
 
-        async function sendMessage() {
-            const inputField = document.getElementById('user-input');
-            const userMessage = inputField.value.trim();
-            if (userMessage === '') return;
+    async function sendMessage() {
+        const userInput = document.getElementById('user-input');
+        const userMessage = userInput.value.trim();
+        if (!userMessage) return;
 
-            addMessage(userMessage, 'user-message');
-            inputField.value = '';
+        // Display user message
+        addMessage(userMessage, 'user-message');
+        userInput.value = '';
 
-            const response = await getChatbotResponse(userMessage);
-            addMessage(response, 'bot-message');
-        }
+        // Call ChatGPT API to get the bot's response
+        const botResponse = await getChatGPTResponse(userMessage);
 
-        function addMessage(message, className) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', className);
-            messageDiv.textContent = message;
-            chatboxBody.appendChild(messageDiv);
-            chatboxBody.scrollTop = chatboxBody.scrollHeight;
-        }
+        // Display bot response
+        addMessage(botResponse, 'bot-message');
+    }
 
-        async function getChatbotResponse(message) {
-            const apiKey = 'YOUR_OPENAI_API_KEY'; // OpenAI API Key ကို ထည့်ပါ
-            const apiUrl = 'https://api.openai.com/v1/chat/completions';
+    function addMessage(content, className) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', className);
+        messageDiv.textContent = content;
+        chatBody.appendChild(messageDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
 
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({
-                    model: 'gpt-3.5-turbo', // Model ကို ပြောင်းနိုင်ပါတယ်
-                    messages: [{ role: 'user', content: message }],
-                    max_tokens: 100,
-                    temperature: 0.7
-                })
-            });
+    async function getChatGPTResponse(userMessage) {
+        const apiKey = 'YOUR_OPENAI_API_KEY'; // OpenAI API key ကို ဒီနေရာမှာ ထည့်ပါ
+        const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
-            const data = await response.json();
-            return data.choices[0].message.content;
-        }
-    </script>
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-3.5-turbo',
+                messages: [{ role: 'user', content: userMessage }],
+                max_tokens: 150,
+                temperature: 0.7
+            })
+        });
+
+        const data = await response.json();
+        return data.choices[0].message.content;
+    }
+</script>
+
 </body>
 </html>
