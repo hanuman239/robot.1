@@ -1,34 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wikipedia Style Chatbot</title>
+    <title>မြန်မာစကားပြော ChatGPT Chatbot</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f8f9fa; /* Wikipedia's background color */
+            background-color: #f4f4f4;
         }
 
         .chatbox {
             width: 400px;
-            height: 500px;
+            height: 600px;
             background-color: white;
-            border: 1px solid #a7d7f9; /* Light blue border */
             border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
         }
 
         .chatbox-header {
             padding: 15px;
-            background-color: #3366cc; /* Wikipedia blue */
+            background-color: #007bff;
             color: white;
             text-align: center;
             font-size: 18px;
@@ -38,111 +36,107 @@
 
         .chatbox-body {
             flex: 1;
-            padding: 20px;
+            padding: 15px;
             overflow-y: auto;
-            background-color: #f8f9fa; /* Light grey background */
+            background-color: #f9f9f9;
         }
 
-        .chatbox-body .message {
+        .message {
             margin: 10px 0;
             padding: 10px;
             border-radius: 10px;
         }
 
-        .chatbox-body .bot-message {
-            background-color: #3366cc; /* Wikipedia blue */
+        .bot-message {
+            background-color: #007bff;
             color: white;
             text-align: left;
         }
 
-        .chatbox-body .user-message {
-            background-color: #f1f1f1; /* Light grey for user messages */
+        .user-message {
+            background-color: #e0e0e0;
             text-align: right;
         }
 
         .chatbox-footer {
             padding: 10px;
-            background-color: #e9ecef; /* Light grey footer */
+            background-color: #f1f1f1;
             display: flex;
-            justify-content: space-between;
         }
 
         .chatbox-footer input {
-            width: 85%;
+            flex: 1;
             padding: 10px;
-            border: 1px solid #ced4da; /* Light border */
+            border: 1px solid #ccc;
             border-radius: 5px;
         }
 
         .chatbox-footer button {
-            width: 10%;
             padding: 10px;
-            background-color: #3366cc; /* Wikipedia blue */
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
+            margin-left: 10px;
             cursor: pointer;
-        }
-
-        .chatbox-footer button:hover {
-            background-color: #254a9d; /* Darker blue on hover */
         }
     </style>
 </head>
 <body>
     <div class="chatbox">
-        <div class="chatbox-header">
-            Wikipedia Style Chatbot
-        </div>
+        <div class="chatbox-header">မြန်မာ Chatbot</div>
         <div class="chatbox-body" id="chatbox-body">
-            <div class="message bot-message">Hello! How can I help you today?</div>
+            <div class="message bot-message">ဟေး! ကျွန်တော်ကို မေးမြန်းလိုတာတွေ မေးနိုင်ပါတယ်။</div>
         </div>
         <div class="chatbox-footer">
-            <input type="text" id="user-input" placeholder="Type a message..." />
+            <input type="text" id="user-input" placeholder="စာရိုက်ပါ..." />
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
 
     <script>
-        function sendMessage() {
+        const chatboxBody = document.getElementById('chatbox-body');
+
+        async function sendMessage() {
             const inputField = document.getElementById('user-input');
-            const message = inputField.value;
+            const userMessage = inputField.value.trim();
+            if (userMessage === '') return;
 
-            if (message.trim() !== '') {
-                // Add user message
-                addMessage(message, 'user-message');
+            addMessage(userMessage, 'user-message');
+            inputField.value = '';
 
-                // Clear input field
-                inputField.value = '';
-
-                // Simulate bot response
-                setTimeout(() => {
-                    const botReply = getBotReply(message);
-                    addMessage(botReply, 'bot-message');
-                }, 1000);
-            }
+            const response = await getChatbotResponse(userMessage);
+            addMessage(response, 'bot-message');
         }
 
-        function addMessage(text, className) {
-            const chatboxBody = document.getElementById('chatbox-body');
+        function addMessage(message, className) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', className);
-            messageDiv.textContent = text;
+            messageDiv.textContent = message;
             chatboxBody.appendChild(messageDiv);
-
-            // Scroll to the bottom
             chatboxBody.scrollTop = chatboxBody.scrollHeight;
         }
 
-        function getBotReply(userMessage) {
-            // Simple bot logic for example
-            if (userMessage.toLowerCase().includes('hello')) {
-                return 'Hi there! How can I assist you?';
-            } else if (userMessage.toLowerCase().includes('help')) {
-                return 'Sure! What do you need help with?';
-            } else {
-                return 'Sorry, I didn\'t understand that. Can you try asking something else?';
-            }
+        async function getChatbotResponse(message) {
+            const apiKey = 'YOUR_OPENAI_API_KEY'; // OpenAI API Key ကို ထည့်ပါ
+            const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: 'gpt-3.5-turbo', // Model ကို ပြောင်းနိုင်ပါတယ်
+                    messages: [{ role: 'user', content: message }],
+                    max_tokens: 100,
+                    temperature: 0.7
+                })
+            });
+
+            const data = await response.json();
+            return data.choices[0].message.content;
         }
     </script>
 </body>
