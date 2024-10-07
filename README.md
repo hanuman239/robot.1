@@ -1,12 +1,23 @@
-# fileinfo.github.io
-# Myanmar FileInfo Website
+# RoBot HANUMAN
 
-Myanmar FileInfo Website သည် file information များကို မြန်မာဘာသာဖြင့်လွယ်ကူစွာ ဖတ်ရှုလေ့လာနိုင်သော ဝက်ဆိုက်ဒ်တစ်ခုဖြစ်သည်။ 
-
+RoBot HANUMAN သည် RiveScript ကို အသုံးပြု၍ ဖွဲ့စည်းထားသော chatbot ဖြစ်ပြီး သုံးစွဲသူများ၏ မေးခွန်းများကို ဖြေကြားနိုင်သည်။ Bot သည် မြန်မာဘာသာစကားနှင့် အင်္ဂလိပ်ဘာသာစကားကို လက်ခံပြီး အသံဖြင့် ပြောဆိုနိုင်ပါသည်။
 
 ## Features
 
-- **File Details**: ဖိုင်၏ အမျိုးအစား၊ ဖိုင်အမည် စသည့် ဖိုင်အသေးစိတ်အချက်အလက်များကို ပြသပေးသည်။
-- **Search Function**: ဖိုင်များကို အမည်ဖြင့်  ဥပမာ( .html, .pdf, .scv) နည်းဖြင့်ရှာဖွေခြင်းလုပ်ဆောင်နိုင်သည်။
+- မြန်မာဘာသာစကားနှင့် အင်္ဂလိပ်ဘာသာစကားကို လက်ခံသည်။
+- RiveScript ကို အသုံးပြု၍ bot ၏ အဖြေများကို ဖွဲ့စည်းသည်။
+- Bot ၏ အဖြေများကို အသံဖြင့် ပြောဆိုသည်။
 
-# သတိပေးချက်။ စမ်းသပ်ဆဲ
+## Technologies Used
+
+- HTML
+- CSS
+- JavaScript
+- RiveScript
+
+## Installation
+
+1. **Clone the Repository**: GitHub မှ Repository ကို clone လုပ်ပါ။
+
+   ```bash
+   git clone <repository-url>
