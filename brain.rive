@@ -8,12 +8,9 @@
 + my name is *
 - Nice to meet you, <star>!
 
-// Myanmar language responses
-+ မင်္ဂလာပါ
-- မင်္ဂလာပါ! ဘယ်လိုကူညီပေးရမလဲ?
+// General replies
++ (what|who) is your name
+- My name is HANUMAN, your chatbot assistant.
 
-+ နာမည်က * 
-- မင်္ဂလာပါ <star>!
-
-+ ဟုတ်ကဲ့
-- ဟုတ်ကဲ့၊ သင့်ကိုကူညီပေးပါမယ်။
++ bye
+- Goodbye! Have a great day.
