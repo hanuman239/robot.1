@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wikipedia Style Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa; /* Wikipedia's background color */
+        }
+
+        .chatbox {
+            width: 400px;
+            height: 500px;
+            background-color: white;
+            border: 1px solid #a7d7f9; /* Light blue border */
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chatbox-header {
+            padding: 15px;
+            background-color: #3366cc; /* Wikipedia blue */
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .chatbox-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f8f9fa; /* Light grey background */
+        }
+
+        .chatbox-body .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .chatbox-body .bot-message {
+            background-color: #3366cc; /* Wikipedia blue */
+            color: white;
+            text-align: left;
+        }
+
+        .chatbox-body .user-message {
+            background-color: #f1f1f1; /* Light grey for user messages */
+            text-align: right;
+        }
+
+        .chatbox-footer {
+            padding: 10px;
+            background-color: #e9ecef; /* Light grey footer */
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .chatbox-footer input {
+            width: 85%;
+            padding: 10px;
+            border: 1px solid #ced4da; /* Light border */
+            border-radius: 5px;
+        }
+
+        .chatbox-footer button {
+            width: 10%;
+            padding: 10px;
+            background-color: #3366cc; /* Wikipedia blue */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chatbox-footer button:hover {
+            background-color: #254a9d; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="chatbox">
+        <div class="chatbox-header">
+            Wikipedia Style Chatbot
+        </div>
+        <div class="chatbox-body" id="chatbox-body">
+            <div class="message bot-message">Hello! How can I help you today?</div>
+        </div>
+        <div class="chatbox-footer">
+            <input type="text" id="user-input" placeholder="Type a message..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const message = inputField.value;
+
+            if (message.trim() !== '') {
+                // Add user message
+                addMessage(message, 'user-message');
+
+                // Clear input field
+                inputField.value = '';
+
+                // Simulate bot response
+                setTimeout(() => {
+                    const botReply = getBotReply(message);
+                    addMessage(botReply, 'bot-message');
+                }, 1000);
+            }
+        }
+
+        function addMessage(text, className) {
+            const chatboxBody = document.getElementById('chatbox-body');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', className);
+            messageDiv.textContent = text;
+            chatboxBody.appendChild(messageDiv);
+
+            // Scroll to the bottom
+            chatboxBody.scrollTop = chatboxBody.scrollHeight;
+        }
+
+        function getBotReply(userMessage) {
+            // Simple bot logic for example
+            if (userMessage.toLowerCase().includes('hello')) {
+                return 'Hi there! How can I assist you?';
+            } else if (userMessage.toLowerCase().includes('help')) {
+                return 'Sure! What do you need help with?';
+            } else {
+                return 'Sorry, I didn\'t understand that. Can you try asking something else?';
+            }
+        }
+    </script>
+</body>
+</html>
