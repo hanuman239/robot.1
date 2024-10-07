@@ -1,150 +1,46 @@
 <!DOCTYPE html>
-<html lang="my">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>မြန်မာစကားပြော ChatGPT Chatbot</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .chat-container {
-            width: 400px;
-            height: 600px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-header {
-            padding: 15px;
-            background-color: #007bff;
-            color: white;
-            font-size: 18px;
-            text-align: center;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-        }
-
-        .chat-body {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            background-color: #f9f9f9;
-        }
-
-        .message {
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 10px;
-        }
-
-        .user-message {
-            background-color: #e0e0e0;
-            text-align: right;
-        }
-
-        .bot-message {
-            background-color: #007bff;
-            color: white;
-            text-align: left;
-        }
-
-        .chat-footer {
-            display: flex;
-            padding: 10px;
-            background-color: #f1f1f1;
-        }
-
-        .chat-footer input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .chat-footer button {
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RiveScript Chatbot</title>
+  <script src="https://unpkg.com/rivescript@2.1.0/dist/rivescript.min.js"></script>
 </head>
 <body>
+  <h1>RiveScript Chatbot</h1>
+  <div id="chatbox">
+    <div id="output"></div>
+    <input type="text" id="input" placeholder="Say something...">
+    <button id="send">Send</button>
+  </div>
 
-<div class="chat-container">
-    <div class="chat-header">မြန်မာ ChatGPT Chatbot</div>
-    <div class="chat-body" id="chat-body">
-        <div class="message bot-message">မေးမြန်းလိုတာ မေးပါ။</div>
-    </div>
-    <div class="chat-footer">
-        <input type="text" id="user-input" placeholder="စာရိုက်ပါ..." />
-        <button onclick="sendMessage()">Send</button>
-    </div>
-</div>
+  <script>
+    // RiveScript instance
+    const bot = new RiveScript();
 
-<script>
-    const chatBody = document.getElementById('chat-body');
+    // Load RiveScript files
+    bot.loadFile("brain.rive").then(botReady).catch(botNotReady);
 
-    async function sendMessage() {
-        const userInput = document.getElementById('user-input');
-        const userMessage = userInput.value.trim();
-        if (!userMessage) return;
-
-        // Display user message
-        addMessage(userMessage, 'user-message');
-        userInput.value = '';
-
-        // Call ChatGPT API to get the bot's response
-        const botResponse = await getChatGPTResponse(userMessage);
-
-        // Display bot response
-        addMessage(botResponse, 'bot-message');
+    // Bot ready function
+    function botReady() {
+      console.log("Bot ready!");
+      bot.sortReplies();
     }
 
-    function addMessage(content, className) {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', className);
-        messageDiv.textContent = content;
-        chatBody.appendChild(messageDiv);
-        chatBody.scrollTop = chatBody.scrollHeight;
+    // Bot error handling
+    function botNotReady(err) {
+      console.log("Error!", err);
     }
 
-    async function getChatGPTResponse(userMessage) {
-        const apiKey = 'YOUR_OPENAI_API_KEY'; // OpenAI API key ကို ဒီနေရာမှာ ထည့်ပါ
-        const apiUrl = 'https://api.openai.com/v1/chat/completions';
-
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: 'gpt-3.5-turbo',
-                messages: [{ role: 'user', content: userMessage }],
-                max_tokens: 150,
-                temperature: 0.7
-            })
-        });
-
-        const data = await response.json();
-        return data.choices[0].message.content;
-    }
-</script>
-
+    // User interaction
+    document.querySelector("#send").addEventListener("click", () => {
+      const input = document.querySelector("#input").value;
+      bot.reply("local-user", input).then(reply => {
+        document.querySelector("#output").innerHTML += `<p><b>User:</b> ${input}</p>`;
+        document.querySelector("#output").innerHTML += `<p><b>Bot:</b> ${reply}</p>`;
+        document.querySelector("#input").value = "";
+      });
+    });
+  </script>
 </body>
 </html>
