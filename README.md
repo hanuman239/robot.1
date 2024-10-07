@@ -15,9 +15,3 @@ RoBot.1သည် RiveScript ကို အသုံးပြု၍ ဖွဲ့�
 - JavaScript
 - RiveScript
 
-## Installation
-
-1. **Clone the Repository**: GitHub မှ Repository ကို clone လုပ်ပါ။
-
-   ```bash
-   git clone <repository-url>
