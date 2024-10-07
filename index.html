@@ -1,16 +1,86 @@
 <!DOCTYPE html>
-<html lang="my-en">
+<html lang="my">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RiveScript Chatbot</title>
+  
+  <!-- Include RiveScript.js from CDN -->
   <script src="https://unpkg.com/rivescript@2.1.0/dist/rivescript.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa; /* Background color similar to Wikipedia */
+      color: #212529; /* Dark gray text */
+      margin: 0;
+      padding: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #3366cc; /* Wikipedia blue color */
+      margin-bottom: 20px;
+    }
+
+    #chatbox {
+      width: 90%;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background-color: #ffffff; /* White background for the chatbox */
+      border: 1px solid #ccc; /* Light border */
+      border-radius: 5px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #output {
+      height: 400px;
+      overflow-y: auto; /* Scrollable area */
+      border: 1px solid #ccc; /* Light border for output area */
+      padding: 10px;
+      background-color: #f9f9f9; /* Light gray background for output */
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      width: calc(100% - 110px); /* Responsive input field */
+      padding: 10px;
+      border: 1px solid #ccc; /* Light border */
+      border-radius: 5px;
+      font-size: 14px; /* Font size for input */
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #3366cc; /* Wikipedia blue */
+      color: white; /* White text */
+      border: none; /* No border */
+      border-radius: 5px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor */
+      font-size: 14px; /* Font size for button */
+    }
+
+    button:hover {
+      background-color: #004d99; /* Darker blue on hover */
+    }
+
+    p {
+      margin: 5px 0; /* Margin for paragraphs */
+    }
+
+    p b {
+      color: #3366cc; /* Wikipedia blue for user/bot labels */
+    }
+  </style>
+
 </head>
 <body>
   <h1>RiveScript Chatbot</h1>
   <div id="chatbox">
     <div id="output"></div>
-    <input type="text" id="input" placeholder="Say something...">
+    <input type="text" id="input" placeholder="Say something..." autocomplete="off">
     <button id="send">Send</button>
   </div>
 
@@ -18,28 +88,31 @@
     // RiveScript instance
     const bot = new RiveScript();
 
-    // Load RiveScript files
-    bot.loadFile("brain.rive").then(botReady).catch(botNotReady);
-
-    // Bot ready function
-    function botReady() {
-      console.log("Bot ready!");
+    // Load the RiveScript content from an external .rive file
+    bot.loadFile("brain.rive").then(() => {
       bot.sortReplies();
-    }
-
-    // Bot error handling
-    function botNotReady(err) {
-      console.log("Error!", err);
-    }
+    }).catch((error) => {
+      console.error("Error loading RiveScript file:", error);
+    });
 
     // User interaction
     document.querySelector("#send").addEventListener("click", () => {
       const input = document.querySelector("#input").value;
-      bot.reply("local-user", input).then(reply => {
-        document.querySelector("#output").innerHTML += `<p><b>User:</b> ${input}</p>`;
-        document.querySelector("#output").innerHTML += `<p><b>Bot:</b> ${reply}</p>`;
-        document.querySelector("#input").value = "";
-      });
+      if (input.trim() !== "") {
+        bot.reply("local-user", input).then(reply => {
+          document.querySelector("#output").innerHTML += `<p><b>User:</b> ${input}</p>`;
+          document.querySelector("#output").innerHTML += `<p><b>Bot:</b> ${reply}</p>`;
+          document.querySelector("#input").value = "";
+          document.querySelector("#output").scrollTop = document.querySelector("#output").scrollHeight; // Scroll to the bottom
+        });
+      }
+    });
+
+    // Send message on Enter key press
+    document.querySelector("#input").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        document.querySelector("#send").click();
+      }
     });
   </script>
 </body>
