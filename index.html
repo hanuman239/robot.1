@@ -96,9 +96,9 @@
   });
 
   // Function to speak the bot's reply
-  function speak(text) {
+  function speak(text, lang) {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US'; // သင်လိုအပ်သလို ဘာသာစကားကို သတ်မှတ်ပါ
+    utterance.lang = lang; // Set language dynamically
     speechSynthesis.speak(utterance);
   }
 
@@ -106,14 +106,17 @@
   document.querySelector("#send").addEventListener("click", () => {
     const input = document.querySelector("#input").value;
     if (input.trim() !== "") {
+      // Determine the language based on the input
+      const lang = /[\u1000-\u109F]/.test(input) ? 'my-MM' : 'en-US'; // Check if input contains Myanmar characters
+
       bot.reply("local-user", input).then(reply => {
         document.querySelector("#output").innerHTML += `<p><b>User:</b> ${input}</p>`;
         document.querySelector("#output").innerHTML += `<p><b>Bot:</b> ${reply}</p>`;
         document.querySelector("#input").value = "";
         document.querySelector("#output").scrollTop = document.querySelector("#output").scrollHeight; // Scroll to the bottom
 
-        // Speak the bot's reply
-        speak(reply);
+        // Speak the bot's reply with the determined language
+        speak(reply, lang);
       });
     }
   });
@@ -125,5 +128,6 @@
     }
   });
 </script>
+
 </body>
 </html>
