@@ -6,7 +6,7 @@
 < begin
 
 // The Botmaster's Name
-! var master = localuser
+! var master = MIn Zin
 
 // Bot Variables
 ! var name     = Mg Mg
