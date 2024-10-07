@@ -695,3 +695,30 @@
   my $ip = get "http://icanhazip.com";
   return $ip;
 < object
+
+// The object name is "hash", written in Perl
+> object hash perl
+  my ($rs, $args) = @_;
+  my $method = shift @{$args};
+  my $string = join " ", @{$args};
+
+  # Here, $method is a hashing method (MD5 or SHA1), and $string
+  # is the text to hash.
+
+  if ($method eq "MD5") {
+    require Digest::MD5;
+    return Digest::MD5::md5_hex($string);
+  }
+  elsif ($method eq "SHA1") {
+    require Digest::SHA1;
+    return Digest::SHA1::sha1_hex($string);
+  }
+< object
+
+// You call an object using the <call> tag.
++ what is the md5 hash of *
+- The hash of "<star>" is: <call>hash MD5 <star></call>
+
++ what is the sha1 hash of *
+- The hash of "<star>" is: <call>hash SHA1 <star></call>
+
